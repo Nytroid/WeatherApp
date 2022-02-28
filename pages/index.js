@@ -20,7 +20,7 @@ export default function Home() {
 
         <div className={styles.grid}>
          <Link href='/lookup'> 
-         <a className={styles.card}>Get your city's weather</a>
+         <a className={styles.card}>Get your city&#39;s weather</a>
           </Link>
         </div>
       </main>

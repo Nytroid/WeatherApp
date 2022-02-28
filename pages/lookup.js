@@ -15,10 +15,7 @@ import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 const theme = createTheme({
     palette: {
       success: {
-        // light: will be calculated from palette.primary.main,
         main: '#73ff7a'
-        // dark: will be calculated from palette.primary.main,
-        // contrastText: will be calculated to contrast with palette.primary.main
       },
       mode: 'dark'
     }
@@ -34,7 +31,7 @@ const CustomTheme = createTheme({
               fontWeight: "bold",
               color: "#73ff7a"}}]}}});
 
-export default function weather() {
+export default function Weather() {
 
     const APIkey = "a0aacf0e9a9faab5cbb37f243e0f7f94"
 
@@ -156,7 +153,7 @@ export default function weather() {
         onSubmit={getCoordinatesForm} 
         className={styles.topnav} 
         >
-      <label htmlFor="city">Enter your city's name:       </label>
+      <label htmlFor="city"> Enter your city&#39;s name:       </label>
       <input type="text" id="cityInput" name="city" required placeholder="Your city's name..."/>
     </form>             
                         <br></br>
@@ -168,7 +165,7 @@ export default function weather() {
       sx={{ mt:0, ml: 0 }}
       variant= 'bold'
       onClick={getCity}>
-          <MyLocationSharpIcon/> 
+          <MyLocationSharpIcon/>  
         Use your current location
       </Button>
     </ThemeProvider>
@@ -187,11 +184,21 @@ export default function weather() {
         <SetUnit value="Farenheit" label="Farenheit" control={<Radio />} />
         </RadioGroup>
         </ThemeProvider>
-      <Button color='success' onClick={scrollUp} className={styles.card}>Choose a different city</Button>
+        
+    <StyledEngineProvider injectFirst>
+    <ThemeProvider theme={CustomTheme}>
+        <Button
+        className={styles.card}
+      size="medium"
+      sx={{ mt:0, ml: 0 }}
+      variant= 'bold'
+      onClick={scrollUp}> Choose a different city
+
+      </Button>
+      </ThemeProvider>
+      </StyledEngineProvider>
     </main>
-    
     </div>
-    
     </>
     )
 }
