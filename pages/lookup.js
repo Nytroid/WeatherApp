@@ -38,19 +38,14 @@ export default function Weather() {
 
 
     const initialState={
-        long: 0,
-        lat: 0,
+        long: '',
+        lat: '',
         city: '',
         country: '',
         state: '',
         symbol: '°F',
         Celsius: 0,
         Farenheit: 0,
-        lat_pos: 0,
-        long_pos: 0,
-        city_ip: "",
-        country_ip: "",
-        state_ip: ""
     }    
 
     const [state, setState] = useState(initialState)
@@ -79,16 +74,31 @@ export default function Weather() {
 }
 
     const getWeather = async () => {
+        try {
         const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${state.lat}&lon=${state.long}&appid=${APIkey}`)
         const data = await response.json()
-        let Farenheit = 9/5*(data.main.temp-273) + 32
-        let Celsius = data.main.temp - 273.15
-        const F = Farenheit.toFixed(2)
-        const C = Celsius.toFixed(2)
-        setState({...state,
-        Celsius: C,
-    Farenheit: F
-    })}
+        if (data.cod == 401) {setState({...state,
+          Farenheit: 'None',
+          Celsius: 'None'}) 
+        return;
+    }
+          let Farenheit = 9/5*(data.main.temp-273) + 32
+          let Celsius = data.main.temp - 273.5
+          const F = Farenheit.toFixed(2)
+          const C = Celsius.toFixed(2)
+          setState({...state,
+          Celsius: C,
+          Farenheit: F
+      })}
+        catch(err){
+          if (err == "TypeError: Cannot read properties of undefined (reading 'temp')") {
+            setState({...state,
+            Farenheit: 'None',
+          Celsius: 'None'})
+            }
+        }
+
+        }
 
     const getCity = async () => {
         const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${state.lat_pos}&longitude=${state.long_pos}localityLanguage=en`)
@@ -109,13 +119,18 @@ export default function Weather() {
         const city = event.target.elements.city.value
         const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${APIkey}`)
         const data = await response.json()
+        if (data.length == 0) {
+          setState({...state, 
+          Farenheit: 'None',
+          Celsius: 'None'})
+      } else {
         setState({...state,
         long: data[0].lon,
         lat: data[0].lat,
         state: data[0].state,
         country: data[0].country,
         city: city
-    })
+    })}
     scrollDown()
   } 
 
@@ -138,8 +153,49 @@ export default function Weather() {
         let temperature = 0
 
         state.symbol == '°F' ? temperature = state.Farenheit : temperature = state.Celsius
+        if (state.Farenheit == 'None' && state.Celsius == 'None') return (
+          <>
+          City not found
+          <br></br>
+        <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={CustomTheme}>
+        <Button
+          className={styles.card}
+          size="medium"
+          sx={{ mt:0, ml: 0 }}
+          variant= 'bold'
+          onClick={scrollUp}> 
+              Find a different city
+        </Button>
+      </ThemeProvider>
+      </StyledEngineProvider>
+      </>
+          )
 
-        return <div className={styles.code}>The weather is {temperature}{state.symbol} in {state.city}, {state.state}</div>
+        return ( 
+          <>
+        <div className={styles.code}>The weather is {temperature}{state.symbol} in {state.city} {state.state}</div>
+        <ThemeProvider theme={theme}>
+        <RadioGroup name="use-radio-group" defaultValue="Farenheit">
+        <SetUnit value="Celsius" label="Celsius" control={<Radio />} />
+        <SetUnit value="Farenheit" label="Farenheit" control={<Radio />} />
+        </RadioGroup>
+        </ThemeProvider>
+        
+    <StyledEngineProvider injectFirst>
+    <ThemeProvider theme={CustomTheme}>
+        <Button
+        className={styles.card}
+      size="medium"
+      sx={{ mt:0, ml: 0 }}
+      variant= 'bold'
+      onClick={scrollUp}> Choose a different city
+
+      </Button>
+      </ThemeProvider>
+      </StyledEngineProvider>
+      </>
+        )
     }
     
     return (
@@ -171,32 +227,10 @@ export default function Weather() {
     </ThemeProvider>
     </StyledEngineProvider>
         </a> 
-        <Link href='/'>
-            <a className={styles.card}>Back to home</a>
-        </Link>
     </main>
       <div ref={divRef}>
     <main className={styles.main} align="center">
     <h2>{renderTemp()}</h2>
-    <ThemeProvider theme={theme}>
-        <RadioGroup name="use-radio-group" defaultValue="Farenheit">
-        <SetUnit value="Celsius" label="Celsius" control={<Radio />} />
-        <SetUnit value="Farenheit" label="Farenheit" control={<Radio />} />
-        </RadioGroup>
-        </ThemeProvider>
-        
-    <StyledEngineProvider injectFirst>
-    <ThemeProvider theme={CustomTheme}>
-        <Button
-        className={styles.card}
-      size="medium"
-      sx={{ mt:0, ml: 0 }}
-      variant= 'bold'
-      onClick={scrollUp}> Choose a different city
-
-      </Button>
-      </ThemeProvider>
-      </StyledEngineProvider>
     </main>
     </div>
     </>
