@@ -64,6 +64,13 @@
     Bitstream Vera Sans Mono, Courier New, monospace;
 }
 
+.center {
+  float: center;
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .topnav a {
   float: left;
   display: block;
@@ -88,6 +95,8 @@
 .topnav {
   overflow: hidden;
 }
+
+
 
 .topnav input[type=text] {
   float: right;

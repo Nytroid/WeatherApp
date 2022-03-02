@@ -67,7 +67,7 @@ export default function Weather() {
       value={props.value}
       control={<Radio color='success'/>}
       label={props.label}
-      labelPlacement="end"
+      labelPlacement="bottom"
     />
     </FormControl>
     )
@@ -175,13 +175,14 @@ export default function Weather() {
         return ( 
           <>
         <div className={styles.code}>The weather is {temperature}{state.symbol} in {state.city} {state.state}</div>
+        <div align='center' className={styles.center}>
         <ThemeProvider theme={theme}>
-        <RadioGroup name="use-radio-group" defaultValue="Farenheit">
+        <RadioGroup row name="use-radio-group" defaultValue="Farenheit">
         <SetUnit value="Celsius" label="Celsius" control={<Radio />} />
         <SetUnit value="Farenheit" label="Farenheit" control={<Radio />} />
         </RadioGroup>
         </ThemeProvider>
-        
+        </div>
     <StyledEngineProvider injectFirst>
     <ThemeProvider theme={CustomTheme}>
         <Button
@@ -223,7 +224,7 @@ export default function Weather() {
       onClick={getCity}>
           <MyLocationSharpIcon/>  
         Use your current location
-      </Button>
+      </Button>      
     </ThemeProvider>
     </StyledEngineProvider>
         </a> 
