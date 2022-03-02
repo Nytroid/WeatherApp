@@ -174,7 +174,12 @@ export default function Weather() {
 
         return ( 
           <>
-        <div className={styles.code}>The weather is {temperature}{state.symbol} in {state.city} {state.state}</div>
+          <div className={styles.Weathercard}>
+            <p className={styles.code}>The temperature is</p>
+            <h1> {temperature}{state.symbol}</h1>
+            <p className={styles.code}> In {state.city}, {state.state} </p> 
+          
+        </div>
         <div align='center' className={styles.center}>
         <ThemeProvider theme={theme}>
         <RadioGroup row name="use-radio-group" defaultValue="Farenheit">
@@ -183,10 +188,11 @@ export default function Weather() {
         </RadioGroup>
         </ThemeProvider>
         </div>
+        <div>
     <StyledEngineProvider injectFirst>
     <ThemeProvider theme={CustomTheme}>
         <Button
-        className={styles.card}
+        className={styles.Weathercard}
       size="medium"
       sx={{ mt:0, ml: 0 }}
       variant= 'bold'
@@ -195,6 +201,7 @@ export default function Weather() {
       </Button>
       </ThemeProvider>
       </StyledEngineProvider>
+      </div>
       </>
         )
     }
@@ -208,7 +215,7 @@ export default function Weather() {
         <form 
         id='cityForm' 
         onSubmit={getCoordinatesForm} 
-        className={styles.topnav} 
+        className={styles.form} 
         >
       <label htmlFor="city"> Enter your city&#39;s name:       </label>
       <input type="text" id="cityInput" name="city" required placeholder="Your city's name..."/>
