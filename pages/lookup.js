@@ -54,6 +54,7 @@ export default function Weather() {
         FeelsLikeCelsius: 0,
         FeelsLikeFarenheit: 0,
         showTemp: true,
+        windowWidth: 1000,
     }    
 
     const [state, setState] = useState(initialState)
@@ -115,6 +116,7 @@ export default function Weather() {
           FeelsLikeCelsius: FC,
           FeelsLikeFarenheitHour: FFH,
           FeelsLikeCelsiusHour: FCH,
+          windowWidth: window.innerWidth
       })}
         catch(err){
           if (err == "TypeError: Cannot read properties of undefined (reading 'temp')") {
@@ -178,6 +180,20 @@ export default function Weather() {
       setState({...state,
         showTemp: false})
       }
+
+      const renderWeather = () => {
+        return (
+        <Grid container
+            direction='row'
+            justifyContent='space-evenly'
+            >
+            <Grid item>
+              {renderHourlyWeather()}
+            </Grid>
+          <Grid item>{renderTemp()}</Grid>
+          <Grid item>{renderHourlyWeather()}</Grid>
+        </Grid>
+        )}
 
     const renderTemp = () => {
         let temperature = 0
@@ -294,16 +310,8 @@ export default function Weather() {
     <main className={styles.main} align="center">
       
           <Bounce left opposite when={state.showTemp}>
-          <Grid container
-            direction='row'
-            justifyContent='space-evenly'
-            >
-            <Grid item>
-              {renderHourlyWeather()}
-            </Grid>
-          <Grid item>{renderTemp()}</Grid>
-          <Grid item>{renderHourlyWeather()}</Grid>
-        </Grid>
+            {state.windowWidth > 970 ? renderWeather() : renderTemp()}
+          
   </Bounce>
     
     </main>
