@@ -293,11 +293,11 @@ export default function Weather() {
         
     <main className={styles.main} align="center">
       
-          <Bounce left opposite when={state.showTemp} delay={0}>
+          <Bounce left opposite when={state.showTemp}>
           <Grid container
-          zeroMinWidth
             direction='row'
-            justifyContent='space-evenly'>
+            justifyContent='space-evenly'
+            >
             <Grid item>
               {renderHourlyWeather()}
             </Grid>
