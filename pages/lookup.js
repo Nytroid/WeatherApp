@@ -168,7 +168,7 @@ export default function Weather() {
     const mainRef = useRef(null);
 
     const scrollDown = () => {
-      divRef.current.scrollIntoView({ behavior: 'smooth' });
+      divRef.current.scrollIntoView({ behavior: 'smooth', block:'center'});
       setState({...state,
         showTemp: true})
     }
