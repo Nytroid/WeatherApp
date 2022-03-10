@@ -195,6 +195,10 @@ export default function Weather() {
         </Grid>
         )}
 
+    const renderScrollButton = () => {
+      return <Button></Button>
+    }
+
     const renderTemp = () => {
         let temperature = 0
         let FeelsLike
