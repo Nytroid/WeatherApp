@@ -168,6 +168,8 @@ export default function Weather() {
 
     const divRef = useRef(null);
     const mainRef = useRef(null);
+    const hourlyRef = useRef(null);
+
 
     const scrollDown = () => {
       divRef.current.scrollIntoView({ behavior: 'smooth'});
@@ -179,6 +181,12 @@ export default function Weather() {
       mainRef.current.scrollIntoView({ behavior: 'smooth' });
       setState({...state,
         showTemp: false})
+      }
+
+      const mobileScrollDown = () => {
+        hourlyRef.current.scrollIntoView({ behavior: 'smooth', block: 'end'});
+        setState({...state,
+          showMobileHourly: true})
       }
 
       const renderWeather = () => {
@@ -263,6 +271,56 @@ export default function Weather() {
         )
     }
 
+    const renderMobileView = () => {
+       return (
+         <>
+         {renderTemp()}
+         <StyledEngineProvider injectFirst>
+    <ThemeProvider theme={CustomTheme}>
+        <Button
+        className={styles.Weathercard}
+      size="medium"
+      sx={{ mt:0, ml: 0 }}
+      variant= 'bold'
+      onClick={mobileScrollDown}> 
+      🡇 View Hourly Weather 🡇
+      </Button>
+      </ThemeProvider>
+      </StyledEngineProvider>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>     
+        <br></br>   
+      <div ref={hourlyRef} className={styles.main}>
+        {renderHourlyWeather()}
+        <br></br> 
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        
+         </div>
+          </>
+       )
+    }
+
     const renderHourlyWeather = () => {
       const negativeZero = temp => {
         return 1/temp === -Infinity;
@@ -325,7 +383,8 @@ export default function Weather() {
     <main className={styles.main} align="center">
       
           <Bounce left collapse opposite when={state.showTemp}>
-            {state.windowWidth > 970 ? renderWeather() : renderTemp()}
+            {state.windowWidth > 970 ? renderWeather() : renderMobileView()}
+
 
   </Bounce>
     
