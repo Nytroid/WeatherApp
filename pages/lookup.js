@@ -1,6 +1,5 @@
-import styles from '../styles/Home.module.css'
-import Link from 'next/link'
-import { useEffect, useState, useRef } from 'react';
+import styles from '../styles/Home.module.css';
+
 import Button from '@mui/material/Button';
 import MyLocationSharpIcon from '@mui/icons-material/MyLocationSharp';
 import Radio from '@mui/material/Radio';
@@ -12,7 +11,8 @@ import { createTheme} from '@mui/material/styles';
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import Grid from '@mui/material/Grid';
 import Bounce from 'react-reveal/Bounce'; 
-import { Reveal } from 'react-reveal';
+import { useEffect, useState, useRef } from 'react';
+
 
 
 const theme = createTheme({
@@ -170,7 +170,7 @@ export default function Weather() {
     const mainRef = useRef(null);
 
     const scrollDown = () => {
-      divRef.current.scrollIntoView({ behavior: 'smooth', block:'center'});
+      divRef.current.scrollIntoView({ behavior: 'smooth'});
       setState({...state,
         showTemp: true})
     }
@@ -200,7 +200,12 @@ export default function Weather() {
         let FeelsLike
 
         state.symbol == '°F' ? temperature = state.Farenheit : temperature = state.Celsius
+        const negativeZero = temp => {
+          return 1/temp === -Infinity;
+        }
+        if (negativeZero(temperature)) {temperature = 0}
         state.symbol == '°F' ? FeelsLike = state.FeelsLikeFarenheit : FeelsLike = state.FeelsLikeCelsius
+        if (negativeZero(FeelsLike)) {FeelsLike = 0}
         if (state.Farenheit == 'None' && state.Celsius == 'None') return (
           <>
           City not found
@@ -255,6 +260,10 @@ export default function Weather() {
     }
 
     const renderHourlyWeather = () => {
+      const negativeZero = temp => {
+        return 1/temp === -Infinity;
+      }
+
       let date = state.date
       let today = new Date()
       let difference = Math.abs(date - today)
@@ -264,7 +273,9 @@ export default function Weather() {
       let FeelsLike = state.FeelsLikeCelsiusHour
       if (diffHrs > 1) hour = 'hours'
       if (state.symbol == '°F') {temp = state.TwoHourFarenheit}
+      if (negativeZero(temp)) {temp = 0}
       if (state.symbol == '°F') {FeelsLike = state.FeelsLikeFarenheitHour}
+      if (negativeZero(FeelsLike)) {FeelsLike = 0}
       return (
       <>
       <div className={styles.Weathercard}>
@@ -309,9 +320,9 @@ export default function Weather() {
         
     <main className={styles.main} align="center">
       
-          <Bounce left opposite when={state.showTemp}>
+          <Bounce left collapse opposite when={state.showTemp}>
             {state.windowWidth > 970 ? renderWeather() : renderTemp()}
-          
+
   </Bounce>
     
     </main>
