@@ -8,8 +8,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import { useRadioGroup } from '@mui/material';
 import { createTheme} from '@mui/material/styles';
+import Grow from '@mui/material/Grow';
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import Grid from '@mui/material/Grid';
+import Fade from '@mui/material/Fade'
 import Bounce from 'react-reveal/Bounce'; 
 import { useEffect, useState, useRef } from 'react';
 
@@ -204,10 +206,6 @@ export default function Weather() {
         </Grid>
         )}
 
-    const renderScrollButton = () => {
-      return <Button></Button>
-    }
-
     const renderTemp = () => {
         let temperature = 0
         let FeelsLike
@@ -220,7 +218,7 @@ export default function Weather() {
         state.symbol == '°F' ? FeelsLike = state.FeelsLikeFarenheit : FeelsLike = state.FeelsLikeCelsius
         if (negativeZero(FeelsLike)) {FeelsLike = 0}
         if (state.Farenheit == 'None' && state.Celsius == 'None') return (
-          <>
+          <div className={styles.main}>
           City not found
           <br></br>
         <StyledEngineProvider injectFirst>
@@ -235,7 +233,7 @@ export default function Weather() {
         </Button>
       </ThemeProvider>
       </StyledEngineProvider>
-      </>
+      </div>
           )
 
         return ( 
@@ -382,13 +380,11 @@ export default function Weather() {
       <div ref={divRef}>
         
     <main className={styles.main} align="center">
-      
-          <Bounce left collapse opposite when={state.showTemp}>
-            {state.windowWidth > 970 ? renderWeather() : renderMobileView()}
 
-
+  <Bounce left opposite when={state.showTemp}>
+    {state.windowWidth > 970 ? renderWeather() : renderMobileView()}
   </Bounce>
-    
+
     </main>
     </div>
     </>
