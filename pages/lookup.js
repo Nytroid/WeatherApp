@@ -83,6 +83,7 @@ export default function Weather() {
 }
 
     const getWeather = async () => {
+      if (state.lat != 0 && state.long != 0) {
         try {
         const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${state.lat}&lon=${state.long}&exclude=minutely,daily&appid=${APIkey}`)
         const data = await response.json()
@@ -124,7 +125,7 @@ export default function Weather() {
             Farenheit: 'None',
           Celsius: 'None'})} else {
           window.alert(err)}
-            }
+            }}
 
         }
 
