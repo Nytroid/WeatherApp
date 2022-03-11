@@ -230,7 +230,7 @@ export default function Weather() {
           sx={{ mt:0, ml: 0 }}
           variant= 'bold'
           onClick={scrollUp}> 
-              Find a different city
+              🡅 Find a different city 🡅
         </Button>
       </ThemeProvider>
       </StyledEngineProvider>
@@ -261,7 +261,7 @@ export default function Weather() {
       size="medium"
       sx={{ mt:0, ml: 0 }}
       variant= 'bold'
-      onClick={scrollUp}> Choose a different city
+      onClick={scrollUp}>🡅 Choose a different city 🡅
 
       </Button>
       </ThemeProvider>
