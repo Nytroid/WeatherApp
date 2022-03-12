@@ -1,5 +1,7 @@
 import styles from '../styles/Home.module.css';
 
+import { useEffect, useState, useRef } from 'react';
+
 import Button from '@mui/material/Button';
 import MyLocationSharpIcon from '@mui/icons-material/MyLocationSharp';
 import Radio from '@mui/material/Radio';
@@ -8,12 +10,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import { useRadioGroup } from '@mui/material';
 import { createTheme} from '@mui/material/styles';
-import Grow from '@mui/material/Grow';
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import Grid from '@mui/material/Grid';
-import Fade from '@mui/material/Fade'
+
 import Bounce from 'react-reveal/Bounce'; 
-import { useEffect, useState, useRef } from 'react';
 
 
 
@@ -55,8 +55,6 @@ function CustomButton(props) {
 export default function Weather() {
     const APIkey = "a0aacf0e9a9faab5cbb37f243e0f7f94"
 
-
-
     const initialState={
         long: '',
         lat: '',
@@ -77,7 +75,7 @@ export default function Weather() {
 
     const [state, setState] = useState(initialState)
     
-    const SetUnit = (props) => {
+    const SetUnit = (props) => {      //Find out what unit should be shown and set that unit as symbol in state. Is actually a component
         const radioGroup = useRadioGroup();
         useEffect(() => {if (radioGroup.value == 'Farenheit' && state.symbol == "°C") {
         setState({...state,
@@ -88,7 +86,7 @@ export default function Weather() {
             symbol: '°C'})
 }})
             
-    return (
+    return (  // return the Radio controls to toggle unit
         <FormControl>
     <FormControlLabel
       value={props.value}
@@ -99,12 +97,13 @@ export default function Weather() {
     </FormControl>
     )
 }
-    const getWeather = async () => {
-      if (state.lat != 0 && state.long != 0) {
+
+    const getWeather = async () => {  //get weather data from api using latitude and longitude, only if lat and long arent empty. In try catch format
+      if (!state.lat && !state.long) {
         try {
         const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${state.lat}&lon=${state.long}&exclude=minutely,daily&appid=${APIkey}`)
         const data = await response.json()
-          let Farenheit = 9/5*(data.current.temp-273) + 32
+          let Farenheit = 9/5*(data.current.temp-273) + 32 //Gets all temperature needed, including hourly temp and datetime
           let Celsius = data.current.temp - 273.5
           const F = Farenheit.toFixed(0)
           const C = Celsius.toFixed(0)
@@ -112,7 +111,7 @@ export default function Weather() {
           let FeelsLikeCelsius = data.current.feels_like - 273.5
           const FF = FeelsLikeFarenheit.toFixed(0)
           const FC = FeelsLikeCelsius.toFixed(0)
-          const myDate = new Date(data.hourly[2].dt*1000);
+          const myDate = new Date(data.hourly[2].dt*1000); 
           const TwoHourTemp = data.hourly[2].temp
           const TwoHourFeelsLike = data.hourly[2].feels_like
           const FarenheitHour = 9/5*(TwoHourTemp-273) + 32
@@ -146,7 +145,7 @@ export default function Weather() {
 
         }
 
-    const getCity = async () => {
+    const getCity = async () => {  //Uses ip address geocoder to return latitude, longitude, and details of city
         const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${state.lat_pos}&longitude=${state.long_pos}localityLanguage=en`)
         const data = await response.json()
         document.getElementById("cityInput").value = data.city;
@@ -160,7 +159,7 @@ export default function Weather() {
     scrollDown()
     }
 
-    const getCoordinatesForm = async (event) => {
+    const getCoordinatesForm = async (event) => {  //Uses geocoder api to get lat and long of city given in Form
         event.preventDefault()
         const city = event.target.elements.city.value
         const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${APIkey}`)
@@ -184,12 +183,12 @@ export default function Weather() {
         getWeather()
     }, [state.lat, state.long])
 
-    const divRef = useRef(null);
+    const divRef = useRef(null);  // refs for scrolling down
     const mainRef = useRef(null);
     const hourlyRef = useRef(null);
 
 
-    const scrollDown = () => {
+    const scrollDown = () => {  // scroll up/down functions
       divRef.current.scrollIntoView({ behavior: 'smooth'});
       setState({...state,
         showTemp: true})
@@ -208,7 +207,7 @@ export default function Weather() {
           })
       }
 
-      const Weather = () => {
+      const Weather = () => {  // Displays all weather information in a component using <Temp/> and <HourlyWeather />
         return (
         <Grid container
             direction='row'
@@ -226,7 +225,7 @@ export default function Weather() {
         </Grid>
         )}
 
-    const Temp = () => {
+    const Temp = () => {  // Uses state for temperature and unit and puts them into a card 
         let temperature = 0
         let FeelsLike
 
@@ -234,10 +233,10 @@ export default function Weather() {
         const negativeZero = temp => {
           return 1/temp === -Infinity;
         }
-        if (negativeZero(temperature)) {temperature = 0}
+        if (negativeZero(temperature)) {temperature = 0}  // Convert -0 into 0
         state.symbol == '°F' ? FeelsLike = state.FeelsLikeFarenheit : FeelsLike = state.FeelsLikeCelsius
         if (negativeZero(FeelsLike)) {FeelsLike = 0}
-        if (state.Farenheit == 'None' && state.Celsius == 'None') return (
+        if (state.Farenheit == 'None' && state.Celsius == 'None') return (  // If temp is undefined, return city not found (Doesn't work right now)
           <div className={styles.main}>
           City not found
           <br></br>
@@ -256,7 +255,7 @@ export default function Weather() {
       </div>
           )
 
-        return ( 
+        return ( // Card for all temperature details and F to C unit toggle underneath
           <>
           <div className={styles.Weathercard}>
             <h1>Temperature: {temperature}{state.symbol}</h1>
@@ -290,7 +289,9 @@ export default function Weather() {
         )
     }
 
-    const MobileView = () => {
+    const MobileView = () => {  //Generates seperate component if windowWidth is too small to display it well using the normal Weather Component. 
+                                //Basically just spreads out all the info into 2 pages that can be scrolled through using buttons. 
+                                //<br>s are to make it look better. 
        return (
          <>
          <br></br>
@@ -311,8 +312,8 @@ export default function Weather() {
       &#x21E9; View Hourly Weather &#x21E9;
       </Button>
       </ThemeProvider>
-      </StyledEngineProvider>
-        <br></br>
+      </StyledEngineProvider>  
+        <br></br>   
         <br></br>
         <br></br>
         <br></br>
@@ -368,8 +369,8 @@ export default function Weather() {
        )
     }
 
-    const HourlyWeather = () => {
-      const negativeZero = temp => {
+    const HourlyWeather = () => {  //Shows HourlyTemp, similar to <Temp /> but different information displayed, and shows the time of that weather
+      const negativeZero = temp => { // Negatuve Zero checker
         return 1/temp === -Infinity;
       }
 
@@ -397,7 +398,7 @@ export default function Weather() {
       </>
       )}
     
-    return (
+    return ( // Puts the components together. I guess. 
         <>           
 <main className={styles.main} ref={mainRef}>
         <a className={styles.card}>
@@ -429,8 +430,8 @@ export default function Weather() {
         
     <main className={styles.main} align="center">
 
-  <Bounce left opposite when={state.showTemp}>
-    {state.windowWidth > 970 ? <Weather /> : <MobileView />}
+ <Bounce left opposite when={state.showTemp}>         {/*<Bounce/> is for animation */}
+    {state.windowWidth > 970 ? <Weather /> : <MobileView />}  {/*Checks if the windowWidth is mobileView or desktop(normal) view*/}
   </Bounce>
 
     </main>
