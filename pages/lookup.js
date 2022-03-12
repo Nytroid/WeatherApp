@@ -99,7 +99,6 @@ export default function Weather() {
     </FormControl>
     )
 }
-
     const getWeather = async () => {
       if (state.lat != 0 && state.long != 0) {
         try {
