@@ -203,7 +203,7 @@ export default function Weather() {
       }
 
       const mobileScrollDown = () => {
-        hourlyRef.current.scrollIntoView({ behavior: 'smooth', block: 'end'});
+        hourlyRef.current.scrollIntoView({ behavior: 'smooth', block: 'center'});
         setState({...state,
           showMobileHourly: true, 
           })
