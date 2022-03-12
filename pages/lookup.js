@@ -36,6 +36,22 @@ const CustomTheme = createTheme({
               fontWeight: "bold",
               color: "#73ff7a"}}]}}});
 
+
+function CustomButton(props) {
+  <StyledEngineProvider injectFirst>
+    <ThemeProvider theme={CustomTheme}>
+      <Button
+      className={styles.Weathercard}
+      size="medium"
+      sx={{ mt:0, ml: 0 }}
+      variant= 'bold'
+      onClick={props.scroll}>
+          {props.text}
+      </Button>
+      </ThemeProvider>
+      </StyledEngineProvider>
+}
+
 export default function Weather() {
     const APIkey = "a0aacf0e9a9faab5cbb37f243e0f7f94"
 
@@ -189,7 +205,8 @@ export default function Weather() {
       const mobileScrollDown = () => {
         hourlyRef.current.scrollIntoView({ behavior: 'smooth', block: 'end'});
         setState({...state,
-          showMobileHourly: true})
+          showMobileHourly: true, 
+          })
       }
 
       const Weather = () => {
@@ -277,7 +294,13 @@ export default function Weather() {
     const MobileView = () => {
        return (
          <>
-         {}
+         <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+         <Temp />
          <StyledEngineProvider injectFirst>
     <ThemeProvider theme={CustomTheme}>
         <Button
@@ -309,6 +332,28 @@ export default function Weather() {
         <br></br>   
       <div ref={hourlyRef} className={styles.main}>
         <HourlyWeather />
+        <StyledEngineProvider injectFirst>
+    <ThemeProvider theme={CustomTheme}>
+        <Button
+        className={styles.Weathercard}
+      size="medium"
+      sx={{ mt:0, ml: 0 }}
+      variant= 'bold'
+      onClick={scrollUp}>&#x21E7; Choose a different city &#x21E7;
+
+      </Button>
+      <Button
+        className={styles.Weathercard}
+      size="medium"
+      sx={{ mt:0, ml: 0 }}
+      variant= 'bold'
+      onClick={scrollDown}>&#x21E7; Go to current weather &#x21E7;
+
+      </Button>
+      </ThemeProvider>
+      </StyledEngineProvider>
+      
+
         <br></br> 
         <br></br>
         <br></br>
