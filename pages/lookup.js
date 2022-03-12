@@ -192,21 +192,25 @@ export default function Weather() {
           showMobileHourly: true})
       }
 
-      const renderWeather = () => {
+      const Weather = () => {
         return (
         <Grid container
             direction='row'
             justifyContent='space-evenly'
             >
             <Grid item>
-              {renderHourlyWeather()}
+             <HourlyWeather />
             </Grid>
-          <Grid item>{renderTemp()}</Grid>
-          <Grid item>{renderHourlyWeather()}</Grid>
+          <Grid item>
+            <Temp/>
+          </Grid>
+          <Grid item>
+            <HourlyWeather />
+            </Grid>
         </Grid>
         )}
 
-    const renderTemp = () => {
+    const Temp = () => {
         let temperature = 0
         let FeelsLike
 
@@ -229,7 +233,7 @@ export default function Weather() {
           sx={{ mt:0, ml: 0 }}
           variant= 'bold'
           onClick={scrollUp}> 
-              🡅 Find a different city 🡅
+              &#x21E7; Find a different city &#x21E7;
         </Button>
       </ThemeProvider>
       </StyledEngineProvider>
@@ -260,7 +264,7 @@ export default function Weather() {
       size="medium"
       sx={{ mt:0, ml: 0 }}
       variant= 'bold'
-      onClick={scrollUp}>🡅 Choose a different city 🡅
+      onClick={scrollUp}>&#x21E7; Choose a different city &#x21E7;
 
       </Button>
       </ThemeProvider>
@@ -270,10 +274,10 @@ export default function Weather() {
         )
     }
 
-    const renderMobileView = () => {
+    const MobileView = () => {
        return (
          <>
-         {renderTemp()}
+         {}
          <StyledEngineProvider injectFirst>
     <ThemeProvider theme={CustomTheme}>
         <Button
@@ -282,7 +286,7 @@ export default function Weather() {
       sx={{ mt:0, ml: 0 }}
       variant= 'bold'
       onClick={mobileScrollDown}> 
-      🡇 View Hourly Weather 🡇
+      &#x21E9; View Hourly Weather &#x21E9;
       </Button>
       </ThemeProvider>
       </StyledEngineProvider>
@@ -304,7 +308,7 @@ export default function Weather() {
         <br></br>     
         <br></br>   
       <div ref={hourlyRef} className={styles.main}>
-        {renderHourlyWeather()}
+        <HourlyWeather />
         <br></br> 
         <br></br>
         <br></br>
@@ -320,7 +324,7 @@ export default function Weather() {
        )
     }
 
-    const renderHourlyWeather = () => {
+    const HourlyWeather = () => {
       const negativeZero = temp => {
         return 1/temp === -Infinity;
       }
@@ -382,7 +386,7 @@ export default function Weather() {
     <main className={styles.main} align="center">
 
   <Bounce left opposite when={state.showTemp}>
-    {state.windowWidth > 970 ? renderWeather() : renderMobileView()}
+    {state.windowWidth > 970 ? <Weather /> : <MobileView />}
   </Bounce>
 
     </main>
