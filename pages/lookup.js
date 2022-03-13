@@ -37,21 +37,6 @@ const CustomTheme = createTheme({
               color: "#73ff7a"}}]}}});
 
 
-function CustomButton(props) {
-  <StyledEngineProvider injectFirst>
-    <ThemeProvider theme={CustomTheme}>
-      <Button
-      className={styles.Weathercard}
-      size="medium"
-      sx={{ mt:0, ml: 0 }}
-      variant= 'bold'
-      onClick={props.scroll}>
-          {props.text}
-      </Button>
-      </ThemeProvider>
-      </StyledEngineProvider>
-}
-
 export default function Weather() {
     const APIkey = "a0aacf0e9a9faab5cbb37f243e0f7f94"
 
@@ -99,7 +84,7 @@ export default function Weather() {
 }
 
     const getWeather = async () => {  //get weather data from api using latitude and longitude, only if lat and long arent empty. In try catch format
-      if (!state.lat && !state.long) {
+      if (state.lat !== '' && state.long !== '') {
         try {
         const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${state.lat}&lon=${state.long}&exclude=minutely,daily&appid=${APIkey}`)
         const data = await response.json()
