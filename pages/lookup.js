@@ -285,6 +285,7 @@ export default function Weather() {
         <br></br>
         <br></br>
         <br></br>
+        <main className={styles.main}>
          <Temp />
          <StyledEngineProvider injectFirst>
     <ThemeProvider theme={CustomTheme}>
@@ -316,6 +317,7 @@ export default function Weather() {
         <br></br>     
         <br></br>   
       <div ref={hourlyRef} className={styles.main}>
+      <Bounce left opposite >
         <HourlyWeather />
         <StyledEngineProvider injectFirst>
     <ThemeProvider theme={CustomTheme}>
@@ -326,18 +328,18 @@ export default function Weather() {
       variant= 'bold'
       onClick={scrollUp}>&#x21E7; Choose a different city &#x21E7;
 
-      </Button>
+      </Button> 
       <Button
         className={styles.Weathercard}
       size="medium"
       sx={{ mt:0, ml: 0 }}
       variant= 'bold'
-      onClick={scrollDown}>&#x21E7; Go to current weather &#x21E7;
+      onClick={scrollDown}>&#x21E7; Go BACK to current weather &#x21E7;
 
       </Button>
       </ThemeProvider>
       </StyledEngineProvider>
-      
+      </Bounce>
 
         <br></br> 
         <br></br>
@@ -348,8 +350,8 @@ export default function Weather() {
         <br></br>
         <br></br>
         <br></br>
-        
          </div>
+         </main>
           </>
        )
     }
