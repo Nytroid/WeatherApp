@@ -430,7 +430,7 @@ export default function Weather() {
         
     <main className={styles.main} align="center">
 
- <Bounce left opposite when={state.showTemp}>         {/*<Bounce/> is for animation */}
+ <Bounce left opposite when={state.showTemp}>         {/*<Bounce/> is for animation. {when} == when to show  child component */}
     {state.windowWidth > 970 ? <Weather /> : <MobileView />}  {/*Checks if the windowWidth is mobileView or desktop(normal) view*/}
   </Bounce>
 
