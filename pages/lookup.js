@@ -54,6 +54,8 @@ export default function Weather() {
         TwoHourFarenheit: 'None',
         FeelsLikeCelsius: 0,
         FeelsLikeFarenheit: 0,
+        FeelsLikeCelsiusHour: 0, 
+        FeelsLikeFarenheitHour: 0,
         showTemp: true,
         windowWidth: 1000,
     }    
@@ -90,24 +92,24 @@ export default function Weather() {
         const data = await response.json()
           let Farenheit = 9/5*(data.current.temp-273) + 32 //Gets all temperature needed, including hourly temp and datetime
           let Celsius = data.current.temp - 273.5
-          const F = Farenheit.toFixed(0)
-          const C = Celsius.toFixed(0)
+          const F = Math.round(Farenheit)
+          const C = Math.round(Celsius)
           let FeelsLikeFarenheit = 9/5*(data.current.feels_like-273) + 32
           let FeelsLikeCelsius = data.current.feels_like - 273.5
-          const FF = FeelsLikeFarenheit.toFixed(0)
-          const FC = FeelsLikeCelsius.toFixed(0)
+          const FF = Math.round(FeelsLikeFarenheit)
+          const FC = Math.round(FeelsLikeCelsius)
           const myDate = new Date(data.hourly[2].dt*1000); 
           const TwoHourTemp = data.hourly[2].temp
           const TwoHourFeelsLike = data.hourly[2].feels_like
           const FarenheitHour = 9/5*(TwoHourTemp-273) + 32
           const CelsiusHour = TwoHourTemp - 273.5
-          const FH = FarenheitHour.toFixed(0)
-          const CH = CelsiusHour.toFixed(0)   
+          const FH = Math.round(FarenheitHour)
+          const CH = Math.round(CelsiusHour)
 
           const FeelsLikeFarenheitHour = 9/5*(TwoHourFeelsLike-273) + 32
           const FeelsLikeCelsiusHour = TwoHourFeelsLike - 273.5
-          const FFH = FeelsLikeFarenheitHour.toFixed(0)
-          const FCH = FeelsLikeCelsiusHour.toFixed(0)   
+          const FFH = Math.round(FeelsLikeFarenheitHour)
+          const FCH = Math.round(FeelsLikeCelsiusHour)
           setState({...state,
             date: myDate,
           Celsius: C,
@@ -373,13 +375,13 @@ export default function Weather() {
       if (negativeZero(temp)) {temp = 0}
       if (state.symbol == '°F') {FeelsLike = state.FeelsLikeFarenheitHour}
       if (negativeZero(FeelsLike)) {FeelsLike = 0}
-      return (
+      return (  
       <>
       <div className={styles.Weathercard}>
       <p className={styles.code}>The temperature will be</p>
       <h1> {temp}{state.symbol}</h1>
       <p className={styles.code}>and</p>
-      <h1>Feel Like: {FeelsLike}{state.symbol}</h1>
+      <h1>FeelS Like: {FeelsLike}{state.symbol}</h1>
       <p className={styles.code}> In {diffHrs} {hour} </p> 
       </div>
       </>
