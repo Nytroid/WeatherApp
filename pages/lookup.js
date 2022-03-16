@@ -7,6 +7,7 @@ import MyLocationSharpIcon from '@mui/icons-material/MyLocationSharp';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import { useRadioGroup } from '@mui/material';
 import { createTheme} from '@mui/material/styles';
@@ -66,25 +67,39 @@ export default function Weather() {
     const [state, setState] = useState(initialState)
     
     const SetUnit = (props) => {      //Find out what unit should be shown and set that unit as symbol in state. Is actually a component
-        const radioGroup = useRadioGroup();
-        useEffect(() => {if (radioGroup.value == 'Farenheit' && state.symbol == "°C") {
-        setState({...state,
-            symbol: '°F'})
-    }
-        if (radioGroup.value == 'Celsius' && state.symbol == "°F") {
-        setState({...state,
-            symbol: '°C'})
-}})
+//         const radioGroup = useRadioGroup();
+
+//         useEffect(() => {
+//           console.log(radioGroup.value)
+//           if (radioGroup.value == 'Farenheit' && state.symbol == "°C") {
+//         setState({...state,
+//             symbol: '°F'})
+//     }
+//         if (radioGroup.value == 'Celsius' && state.symbol == "°F") {  
+//         setState({...state,
+//             symbol: '°C'})
+// }}, [radioGroup.value])
+
+const handleChange = (event) => {
+  setState({...state, 
+    symbol: event.target.value});
+};
             
     return (  // return the Radio controls to toggle unit
-        <FormControl>
-    <FormControlLabel
-      value={props.value}
-      control={<Radio color='success'/>}
-      label={props.label}
-      labelPlacement="bottom"
-    />
-    </FormControl>
+    <FormControl>
+    <RadioGroup
+      aria-labelledby="demo-radio-buttons-group-label"
+      defaultValue="°F"
+      name="radio-buttons-group"
+      row
+      value={state.symbol}
+      onChange={handleChange}
+      color='success'
+    >
+      <FormControlLabel value="°F" control={<Radio color='success'/>} label="Farenheit" labelPlacement="top"/>
+      <FormControlLabel value="°C" control={<Radio color='success'/>} label="Celsius"   labelPlacement="top" />
+    </RadioGroup>
+  </FormControl>
     )
 }
 
@@ -259,8 +274,7 @@ export default function Weather() {
         <div align='center' className={styles.center}>
         <ThemeProvider theme={theme}>
         <RadioGroup row name="use-radio-group" defaultValue="Farenheit">
-        <SetUnit value="Celsius" label="Celsius" control={<Radio />} />
-        <SetUnit value="Farenheit" label="Farenheit" control={<Radio />} />
+        <SetUnit />
         </RadioGroup>
         </ThemeProvider>
         </div>
