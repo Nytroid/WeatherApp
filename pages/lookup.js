@@ -95,8 +95,8 @@ const handleChange = (event) => {
       onChange={handleChange}
       color='success'
     >
-      <FormControlLabel value="°F" control={<Radio color='success' />} label="Farenheit" labelPlacement="top"/>
       <FormControlLabel value="°C" control={<Radio color='success'/>} label="Celsius"  labelPlacement="top" />
+      <FormControlLabel value="°F" control={<Radio color='success' />} label="Farenheit" labelPlacement="top"/>
     </RadioGroup>
   </FormControl>
     )
