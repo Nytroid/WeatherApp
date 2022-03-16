@@ -15,6 +15,7 @@ import Grid from '@mui/material/Grid';
 
 import Bounce from 'react-reveal/Bounce'; 
 
+import { useViewportSize } from '@mantine/hooks';
 
 
 const theme = createTheme({
@@ -40,24 +41,26 @@ const CustomTheme = createTheme({
 export default function Weather() {
     const APIkey = "a0aacf0e9a9faab5cbb37f243e0f7f94"
 
+    const  {width} = useViewportSize()
+
     const initialState={
         long: '',
         lat: '',
         city: '',
         country: '',
         state: '',
-        symbol: '°F',
+        symbol: '°C',
         Celsius: 0,
         Farenheit: 0,
         date: 0,
-        TwoHourCelsius: 'None',
-        TwoHourFarenheit: 'None',
+        TwoHourCelsius: 0,
+        TwoHourFarenheit: 0,
         FeelsLikeCelsius: 0,
         FeelsLikeFarenheit: 0,
         FeelsLikeCelsiusHour: 0, 
         FeelsLikeFarenheitHour: 0,
         showTemp: true,
-        windowWidth: 1000,
+        error: true
     }    
 
     const [state, setState] = useState(initialState)
@@ -110,6 +113,7 @@ export default function Weather() {
           const FeelsLikeCelsiusHour = TwoHourFeelsLike - 273.5
           const FFH = Math.round(FeelsLikeFarenheitHour)
           const FCH = Math.round(FeelsLikeCelsiusHour)
+
           setState({...state,
             date: myDate,
           Celsius: C,
@@ -120,16 +124,19 @@ export default function Weather() {
           FeelsLikeCelsius: FC,
           FeelsLikeFarenheitHour: FFH,
           FeelsLikeCelsiusHour: FCH,
-          windowWidth: window.innerWidth
+          error: false
       })}
         catch(err){
-          if (err == "TypeError: Cannot read properties of undefined (reading 'temp')") {
-            setState({...state,
-            Farenheit: 'None',
-          Celsius: 'None'})} else {
-          window.alert(err)}
-            }}
-
+          if (err == "TypeError: Cannot read properties of undefined (reading 'temp')") {}
+             else {
+          window.alert(err)
+        }
+          
+          setState({...state,
+            Farenheit: 0,
+          Celsius: 0, 
+          error: true})
+        }}
         }
 
     const getCity = async () => {  //Uses ip address geocoder to return latitude, longitude, and details of city
@@ -153,15 +160,17 @@ export default function Weather() {
         const data = await response.json()
         if (data.length == 0) {
           setState({...state, 
-          Farenheit: 'None',
-          Celsius: 'None'})
+          Farenheit: 0,
+          Celsius: 0, 
+        error: true})
       } else {
         setState({...state,
         long: data[0].lon,
         lat: data[0].lat,
         state: data[0].state,
         country: data[0].country,
-        city: city
+        city: city, 
+        error: false
     })}
     scrollDown()
   } 
@@ -176,22 +185,19 @@ export default function Weather() {
 
 
     const scrollDown = () => {  // scroll up/down functions
-      divRef.current.scrollIntoView({ behavior: 'smooth'});
+      divRef.current.scrollIntoView({ behavior: 'smooth', block: 'start'});
       setState({...state,
         showTemp: true})
     }
 
     const scrollUp = () => {
-      mainRef.current.scrollIntoView({ behavior: 'smooth' });
+      mainRef.current.scrollIntoView({ behavior: 'smooth'});
       setState({...state,
         showTemp: false})
       }
 
       const mobileScrollDown = () => {
         hourlyRef.current.scrollIntoView({ behavior: 'smooth', block: 'center'});
-        setState({...state,
-          showMobileHourly: true, 
-          })
       }
 
       const Weather = () => {  // Displays all weather information in a component using <Temp/> and <HourlyWeather />
@@ -223,7 +229,7 @@ export default function Weather() {
         if (negativeZero(temperature)) {temperature = 0}  // Convert -0 into 0
         state.symbol == '°F' ? FeelsLike = state.FeelsLikeFarenheit : FeelsLike = state.FeelsLikeCelsius
         if (negativeZero(FeelsLike)) {FeelsLike = 0}
-        if (state.Farenheit == 'None' && state.Celsius == 'None') return (  // If temp is undefined, return city not found (Doesn't work right now)
+        if (state.error) return (  // If temp is undefined, return city not found (Doesn't work right now)
           <div className={styles.main}>
           City not found
           <br></br>
@@ -281,12 +287,6 @@ export default function Weather() {
                                 //<br>s are to make it look better. 
        return (
          <>
-         <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
         <main className={styles.main}>
          <Temp />
          <StyledEngineProvider injectFirst>
@@ -301,7 +301,7 @@ export default function Weather() {
       </Button>
       </ThemeProvider>
       </StyledEngineProvider>  
-        <br></br>   
+        {/* <br></br>   
         <br></br>
         <br></br>
         <br></br>
@@ -316,8 +316,8 @@ export default function Weather() {
         <br></br>
         <br></br>
         <br></br>
-        <br></br>     
-        <br></br>   
+        <br></br>      */}
+        {/* <br></br>    */}
       <div ref={hourlyRef} className={styles.main}>
       <Bounce left opposite >
         <HourlyWeather />
@@ -343,15 +343,15 @@ export default function Weather() {
       </StyledEngineProvider>
       </Bounce>
 
-        <br></br> 
+        {/* <br></br>  */}
+        {/* <br></br>
         <br></br>
         <br></br>
         <br></br>
         <br></br>
         <br></br>
         <br></br>
-        <br></br>
-        <br></br>
+        <br></br> */}
          </div>
          </main>
           </>
@@ -368,10 +368,11 @@ export default function Weather() {
       let difference = Math.abs(date - today)
       let diffHrs = Math.ceil(difference / (1000 * 60 * 60))
       let hour = 'hour'
-      let temp = state.TwoHourCelsius
+      let temp
       let FeelsLike = state.FeelsLikeCelsiusHour
       if (diffHrs > 1) hour = 'hours'
-      if (state.symbol == '°F') {temp = state.TwoHourFarenheit}
+
+      state.symbol == '°F' ? temp = state.TwoHourFarenheit : temp = state.TwoHourCelsius
       if (negativeZero(temp)) {temp = 0}
       if (state.symbol == '°F') {FeelsLike = state.FeelsLikeFarenheitHour}
       if (negativeZero(FeelsLike)) {FeelsLike = 0}
@@ -387,9 +388,9 @@ export default function Weather() {
       </>
       )}
     
-    return ( // Puts the components together. I guess. 
-        <>           
-<main className={styles.main} ref={mainRef}>
+      const Form = () => {   // Component for the form
+        return (
+          <main className={styles.main} ref={mainRef}>
         <a className={styles.card}>
         <form 
         id='cityForm' 
@@ -415,12 +416,19 @@ export default function Weather() {
     </StyledEngineProvider>
         </a> 
     </main>
+        )
+      }
+
+
+    return ( // Puts the components together. I guess. 
+        <>           
+        <Form />
       <div ref={divRef}>
         
     <main className={styles.main} align="center">
 
  <Bounce left opposite when={state.showTemp}>         {/*<Bounce/> is for animation. {when} == when to show  child component */}
-    {state.windowWidth > 970 ? <Weather /> : <MobileView />}  {/*Checks if the windowWidth is mobileView or desktop(normal) view*/}
+    {width > 985 ? <Weather /> : <MobileView />}  {/*Checks if the windowWidth is mobileView or desktop(normal) view*/}
   </Bounce>
 
     </main>
