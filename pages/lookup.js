@@ -50,7 +50,7 @@ export default function Weather() {
         city: '',
         country: '',
         state: '',
-        symbol: '°C',
+        symbol: '°F',
         Celsius: 0,
         Farenheit: 0,
         date: 0,
@@ -89,15 +89,14 @@ const handleChange = (event) => {
     <FormControl>
     <RadioGroup
       aria-labelledby="demo-radio-buttons-group-label"
-      defaultValue="°F"
       name="radio-buttons-group"
       row
       value={state.symbol}
       onChange={handleChange}
       color='success'
     >
-      <FormControlLabel value="°F" control={<Radio color='success'/>} label="Farenheit" labelPlacement="top"/>
-      <FormControlLabel value="°C" control={<Radio color='success'/>} label="Celsius"   labelPlacement="top" />
+      <FormControlLabel value="°F" control={<Radio color='success' />} label="Farenheit" labelPlacement="top"/>
+      <FormControlLabel value="°C" control={<Radio color='success'/>} label="Celsius"  labelPlacement="top" />
     </RadioGroup>
   </FormControl>
     )
